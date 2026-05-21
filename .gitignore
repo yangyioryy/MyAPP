@@ -1,0 +1,35 @@
+# DevEco Studio / IDE local files
+/.idea/
+
+# Hvigor cache, reports, and logs
+/.hvigor/
+
+# Build outputs
+**/build/
+*.hap
+*.har
+*.hsp
+
+# Dependency directories
+node_modules/
+oh_modules/
+
+# Local environment and signing secrets
+.env
+.env.*
+!.env.example
+*.p12
+*.pfx
+*.jks
+*.keystore
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
