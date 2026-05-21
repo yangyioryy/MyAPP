@@ -1,0 +1,43 @@
+{
+  "modulePathMap": {
+    "entry": "E:\\Grade3-2\\HomenyOS\\Homeworks\\Homework2\\MyAPP\\entry"
+  },
+  "compileMode": "esmodule",
+  "projectRootPath": "E:\\Grade3-2\\HomenyOS\\Homeworks\\Homework2\\MyAPP",
+  "nodeModulesPath": "E:\\Grade3-2\\HomenyOS\\Homeworks\\Homework2\\MyAPP\\entry\\build\\default\\intermediates\\loader_out\\default\\node_modules",
+  "byteCodeHarInfo": {},
+  "declarationEntry": [],
+  "moduleName": "entry",
+  "hspNameOhmMap": {},
+  "harNameOhmMap": {},
+  "packageManagerType": "ohpm",
+  "compileEntry": [
+    "E:\\Grade3-2\\HomenyOS\\Homeworks\\Homework2\\MyAPP\\entry\\src\\main\\ets\\pages\\MainPage.ets",
+    "E:\\Grade3-2\\HomenyOS\\Homeworks\\Homework2\\MyAPP\\entry\\src\\main\\ets\\pages\\GoalPage.ets",
+    "E:\\Grade3-2\\HomenyOS\\Homeworks\\Homework2\\MyAPP\\entry\\build\\default\\generated\\r\\default\\ResourceTable.ts"
+  ],
+  "otherCompileFiles": [],
+  "dynamicImportLibInfo": {},
+  "routerMap": [
+    {
+      "ohmurl": "@bundle:com.example.pageanddata/entry/ets/pages/MainPage",
+      "name": "MainPage",
+      "pageSourceFile": "E:\\Grade3-2\\HomenyOS\\Homeworks\\Homework2\\MyAPP\\entry\\src\\main\\ets\\pages\\MainPage.ets",
+      "buildFunction": "MainPageBuilder"
+    },
+    {
+      "ohmurl": "@bundle:com.example.pageanddata/entry/ets/pages/GoalPage",
+      "name": "GoalPage",
+      "pageSourceFile": "E:\\Grade3-2\\HomenyOS\\Homeworks\\Homework2\\MyAPP\\entry\\src\\main\\ets\\pages\\GoalPage.ets",
+      "buildFunction": "GoalPageBuilder"
+    }
+  ],
+  "hspResourcesMap": {},
+  "updateVersionInfo": {},
+  "customizedHar": false,
+  "anBuildOutPut": "E:\\Grade3-2\\HomenyOS\\Homeworks\\Homework2\\MyAPP\\entry\\build\\default\\intermediates\\loader_out\\default\\an\\arm64-v8a",
+  "anBuildMode": "type",
+  "patchConfig": {
+    "changedFileList": "E:\\Grade3-2\\HomenyOS\\Homeworks\\Homework2\\MyAPP\\entry\\build\\default\\intermediates\\patch\\default\\changedFileList.json"
+  }
+}
