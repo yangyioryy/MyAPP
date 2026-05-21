@@ -61,6 +61,82 @@
       "value": "The login is successful."
     },
     {
+      "name": "auth_register_title",
+      "value": "Create account"
+    },
+    {
+      "name": "auth_register_more",
+      "value": "Register an account before logging in"
+    },
+    {
+      "name": "auth_reset_title",
+      "value": "Reset password"
+    },
+    {
+      "name": "auth_reset_more",
+      "value": "Enter your account and new password"
+    },
+    {
+      "name": "register",
+      "value": "Register"
+    },
+    {
+      "name": "reset_password",
+      "value": "Reset password"
+    },
+    {
+      "name": "new_password",
+      "value": "New password"
+    },
+    {
+      "name": "confirm_password",
+      "value": "Confirm password"
+    },
+    {
+      "name": "nickname",
+      "value": "Nickname"
+    },
+    {
+      "name": "email",
+      "value": "Email"
+    },
+    {
+      "name": "back_to_login",
+      "value": "Back to login"
+    },
+    {
+      "name": "account_exists",
+      "value": "The account already exists."
+    },
+    {
+      "name": "account_not_exist",
+      "value": "The account does not exist."
+    },
+    {
+      "name": "password_not_match",
+      "value": "The passwords do not match."
+    },
+    {
+      "name": "register_success",
+      "value": "Registration successful. Please log in."
+    },
+    {
+      "name": "password_reset_success",
+      "value": "Password reset successful. Please log in."
+    },
+    {
+      "name": "login_auth_failed",
+      "value": "Incorrect account or password."
+    },
+    {
+      "name": "edit_profile",
+      "value": "Edit profile"
+    },
+    {
+      "name": "profile_saved",
+      "value": "Profile saved."
+    },
+    {
       "name": "my_love",
       "value": "My favorite"
     },

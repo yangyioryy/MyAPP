@@ -13,9 +13,14 @@
  * limitations under the License.
  */
 
+import { BusinessError } from '@kit.BasicServicesKit';
+import { hilog } from '@kit.PerformanceAnalysisKit';
+import PreferencesUtil, { UserInfo } from '../common/database/PreferencesUtil';
 import ItemData from '../viewmodel/ItemData';
 import mainViewModel from '../viewmodel/MainViewModel';
 import { SliderCustomDialog } from './SliderCustomDialog';
+
+const TAG = 'Setting';
 
 /**
  * Setting tab content
@@ -23,12 +28,119 @@ import { SliderCustomDialog } from './SliderCustomDialog';
 @Component
 export default struct Setting {
   @StorageLink('fontSizeOffset') fontSizeOffset: number = 0;
+  @Link pathStack: NavPathStack;
+  @State account: string = '';
+  @State accountName: string = 'Mr. Lee';
+  @State accountEmail: string = '2000000@test.cc';
+  @State editName: string = '';
+  @State editEmail: string = '';
+  @State isProfileEditShow: boolean = false;
   SliderCustomDialogController: CustomDialogController = new CustomDialogController({
     builder: SliderCustomDialog({}),
     alignment: DialogAlignment.Bottom,
     customStyle: true,
     offset: { dx: 0, dy: -25 }
   });
+
+  private showToast(message: Resource): void {
+    try {
+      this.getUIContext().getPromptAction().showToast({ message: message });
+    } catch (error) {
+      let err = error as BusinessError;
+      hilog.error(0x00, TAG, `showToast failed, code = ${err.code}, message = ${err.message}`);
+    }
+  }
+
+  private refreshUserProfile(): void {
+    let currentUser: UserInfo | undefined = PreferencesUtil.getCurrentUser();
+    if (currentUser !== undefined) {
+      this.account = currentUser.account;
+      this.accountName = currentUser.nickname;
+      this.accountEmail = currentUser.email;
+    }
+  }
+
+  private openProfileEditor(): void {
+    this.editName = this.accountName;
+    this.editEmail = this.accountEmail;
+    this.isProfileEditShow = true;
+  }
+
+  private saveProfile(): void {
+    if (this.editName.trim() === '' || this.editEmail.trim() === '') {
+      this.showToast($r('app.string.input_empty_tips'));
+      return;
+    }
+    if (!PreferencesUtil.updateCurrentUserProfile(this.editName, this.editEmail)) {
+      this.showToast($r('app.string.account_not_exist'));
+      return;
+    }
+    this.refreshUserProfile();
+    this.isProfileEditShow = false;
+    this.showToast($r('app.string.profile_saved'));
+  }
+
+  @Builder
+  editProfileSheet() {
+    Column({ space: 16 }) {
+      Text($r('app.string.edit_profile'))
+        .fontSize(20 + this.fontSizeOffset)
+        .fontWeight(700)
+        .width('100%')
+        .textAlign(TextAlign.Center)
+
+      Row() {
+        Text($r('app.string.account'))
+          .fontSize(16 + this.fontSizeOffset)
+        Text(this.account)
+          .fontSize(16 + this.fontSizeOffset)
+          .fontColor('#66182431')
+      }
+      .width('90%')
+      .justifyContent(FlexAlign.SpaceBetween)
+
+      TextInput({ text: this.editName, placeholder: $r('app.string.nickname') })
+        .height('44vp')
+        .width('90%')
+        .maxLength(16)
+        .onChange((value: string) => {
+          this.editName = value;
+        })
+
+      TextInput({ text: this.editEmail, placeholder: $r('app.string.email') })
+        .height('44vp')
+        .width('90%')
+        .maxLength(32)
+        .onChange((value: string) => {
+          this.editEmail = value;
+        })
+
+      Row({ space: 12 }) {
+        Button($r('app.string.Cancel'))
+          .width('42%')
+          .height('40vp')
+          .backgroundColor('#0d000000')
+          .fontColor('#0A59F7')
+          .onClick(() => {
+            this.isProfileEditShow = false;
+          })
+        Button($r('app.string.Confirmed'))
+          .width('42%')
+          .height('40vp')
+          .onClick(() => {
+            this.saveProfile();
+          })
+      }
+      .width('90%')
+      .justifyContent(FlexAlign.SpaceBetween)
+    }
+    .padding({ top: '20vp', bottom: '24vp' })
+    .width('100%')
+  }
+
+  aboutToAppear(): void {
+    this.refreshUserProfile();
+  }
 
   @Builder
   settingCell(item: ItemData, customDialogController: CustomDialogController) {
@@ -82,17 +194,25 @@ export default struct Setting {
             .width('48vp')
             .height('48vp')
           Column() {
-            Text($r('app.string.setting_account_name'))
+            Text(this.accountName)
               .fontSize(20 + this.fontSizeOffset)
-            Text($r('app.string.setting_account_email'))
+            Text(this.accountEmail)
               .fontSize(12 + this.fontSizeOffset)
               .margin({ top: '4vp' })
           }
           .alignItems(HorizontalAlign.Start)
           .margin({ left: '12vp' })
+          Blank()
+          Image($r('app.media.edit'))
+            .width('32vp')
+            .height('32vp')
+            .margin({ right: '12vp' })
         }
         .alignItems(VerticalAlign.Center)
         .width('100%')
+        .onClick(() => {
+          this.openProfileEditor();
+        })
 
         List({ space: 12 }) {
           ForEach(mainViewModel.getSettingListData(), (item: ItemData[]) => {
@@ -132,6 +252,16 @@ export default struct Setting {
           .fontWeight(FontWeight.Medium)
           .backgroundColor('#E5E8EA')
           .margin({ bottom: '16vp' })
+          .onClick(() => {
+            PreferencesUtil.clearCurrentAccount();
+            this.pathStack.pop();
+          })
+          .bindSheet(this.isProfileEditShow, this.editProfileSheet(), {
+            height: '320vp',
+            onDisappear: () => {
+              this.isProfileEditShow = false;
+            }
+          })
       }
       .height('100%')
     }

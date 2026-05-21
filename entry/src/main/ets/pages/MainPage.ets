@@ -36,6 +36,13 @@ export struct MainPage {
     this.fontSizeOffset = PreferencesUtil.getChangeFontSize();
   }
 
+  private changeTab(index: number): void {
+    this.getUIContext().animateTo({ duration: 320, curve: Curve.EaseOut }, () => {
+      this.currentIndex = index;
+    });
+    this.tabsController.changeIndex(index);
+  }
+
   @Builder
   TabBuilder(title: Resource, index: number, selectedImg: Resource) {
     Column() {
@@ -55,9 +62,13 @@ export struct MainPage {
     .justifyContent(FlexAlign.Center)
     .height('56vp')
     .width('100%')
+    .scale({
+      x: this.currentIndex === index ? 1.08 : 1,
+      y: this.currentIndex === index ? 1.08 : 1
+    })
+    .animation({ duration: 260, curve: Curve.EaseOut })
     .onClick(() => {
-      this.currentIndex = index;
-      this.tabsController.changeIndex(this.currentIndex);
+      this.changeTab(index);
     })
   }
 
@@ -78,7 +89,7 @@ export struct MainPage {
         .tabBar(this.TabBuilder($r('app.string.Tab_Bar_One'), 0, $r('sys.symbol.house_fill')))
 
         TabContent() {
-          Setting()
+          Setting({ pathStack: this.pathStack })
         }
         .padding({
           left: '12vp',
@@ -92,8 +103,12 @@ export struct MainPage {
       .height('100%')
       .barHeight('80vp')
       .barMode(BarMode.Fixed)
+      .animationDuration(420)
+      .animationMode(AnimationMode.CONTENT_FIRST)
       .onChange((index: number) => {
-        this.currentIndex = index;
+        this.getUIContext().animateTo({ duration: 320, curve: Curve.EaseOut }, () => {
+          this.currentIndex = index;
+        });
       })
     }
     .height('100%')

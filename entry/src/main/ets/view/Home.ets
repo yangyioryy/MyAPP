@@ -28,6 +28,7 @@ export default struct Home {
   @StorageLink('fontSizeOffset') fontSizeOffset: number = 0;
   @State httpGridItems: Array<ListInfo> = [];
   @State pictureUri: string = '';
+  @State swiperIndex: number = 0;
   @Link pathStack: NavPathStack;
   private swiperController: SwiperController = new SwiperController();
   private context = this.getUIContext().getHostContext() as common.UIAbilityContext;
@@ -60,13 +61,33 @@ export default struct Home {
       Scroll() {
         Column() {
           Swiper(this.swiperController) {
-            ForEach(mainViewModel.getSwiperImages(), (img: Resource) => {
+            ForEach(mainViewModel.getSwiperImages(), (img: Resource, index: number) => {
               Image(img)
                 .width('100%')
+                .height('170vp')
+                .objectFit(ImageFit.Cover)
                 .borderRadius('16vp')
+                .scale({
+                  x: this.swiperIndex === index ? 1 : 0.94,
+                  y: this.swiperIndex === index ? 1 : 0.94
+                })
+                .opacity(this.swiperIndex === index ? 1 : 0.72)
+                .animation({ duration: 520, curve: Curve.EaseInOut })
             }, (img: Resource) => JSON.stringify(img.id))
           }
           .autoPlay(true)
+          .loop(true)
+          .indicator(true)
+          .interval(2600)
+          .duration(620)
+          .curve(Curve.EaseInOut)
+          .itemSpace('10vp')
+          .height('170vp')
+          .onChange((index: number) => {
+            this.getUIContext().animateTo({ duration: 520, curve: Curve.EaseInOut }, () => {
+              this.swiperIndex = index;
+            });
+          })
 
           Grid() {
             ForEach(mainViewModel.getFirstGridData(), (item: ItemData, index: number) => {
