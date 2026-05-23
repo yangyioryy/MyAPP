@@ -2,4 +2,4 @@
 
 | 轮播图动画 | Tab页动画 |
 | :---: | :---: |
-| ![轮播图](asset/轮播图.gif) | ![tab页](asset/tab页.gif) |
+| <img src="asset/轮播图.gif" width="300"> | <img src="asset/tab页.gif" width="300"> |
