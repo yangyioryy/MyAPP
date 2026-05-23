@@ -137,6 +137,10 @@
       "value": "Profile saved."
     },
     {
+      "name": "change_avatar",
+      "value": "Change avatar"
+    },
+    {
       "name": "my_love",
       "value": "My favorite"
     },

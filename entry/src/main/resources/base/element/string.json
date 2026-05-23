@@ -14,39 +14,39 @@
     },
     {
       "name": "login_page",
-      "value": "Login page"
+      "value": "登录界面"
     },
     {
       "name": "login_more",
-      "value": "Log in to your account to use more services"
+      "value": "登录账号以使用更多服务"
     },
     {
       "name": "account",
-      "value": "Account"
+      "value": "账号"
     },
     {
       "name": "password",
-      "value": "Password"
+      "value": "密码"
     },
     {
       "name": "login",
-      "value": "Log in"
+      "value": "登录"
     },
     {
       "name": "register_account",
-      "value": "Registering an Account"
+      "value": "注册账号"
     },
     {
       "name": "forgot_password",
-      "value": "Forgot Password"
+      "value": "忘记密码"
     },
     {
       "name": "message_login",
-      "value": "SMS verification code login"
+      "value": "短信验证码登录"
     },
     {
       "name": "other_login_method",
-      "value": "Other login methods"
+      "value": "其他登录方式"
     },
     {
       "name": "vertical_line",
@@ -54,87 +54,91 @@
     },
     {
       "name": "input_empty_tips",
-      "value": "The input cannot be empty."
+      "value": "输入不能为空"
     },
     {
       "name": "login_success",
-      "value": "The login is successful."
+      "value": "登录成功"
     },
     {
       "name": "auth_register_title",
-      "value": "Create account"
+      "value": "创建账号"
     },
     {
       "name": "auth_register_more",
-      "value": "Register an account before logging in"
+      "value": "登录前请先注册账号"
     },
     {
       "name": "auth_reset_title",
-      "value": "Reset password"
+      "value": "重置密码"
     },
     {
       "name": "auth_reset_more",
-      "value": "Enter your account and new password"
+      "value": "请输入账号和新密码"
     },
     {
       "name": "register",
-      "value": "Register"
+      "value": "注册"
     },
     {
       "name": "reset_password",
-      "value": "Reset password"
+      "value": "重置密码"
     },
     {
       "name": "new_password",
-      "value": "New password"
+      "value": "新密码"
     },
     {
       "name": "confirm_password",
-      "value": "Confirm password"
+      "value": "确认密码"
     },
     {
       "name": "nickname",
-      "value": "Nickname"
+      "value": "昵称"
     },
     {
       "name": "email",
-      "value": "Email"
+      "value": "邮箱"
     },
     {
       "name": "back_to_login",
-      "value": "Back to login"
+      "value": "返回登录"
     },
     {
       "name": "account_exists",
-      "value": "The account already exists."
+      "value": "该账号已存在"
     },
     {
       "name": "account_not_exist",
-      "value": "The account does not exist."
+      "value": "该账号不存在"
     },
     {
       "name": "password_not_match",
-      "value": "The passwords do not match."
+      "value": "两次输入的密码不一致"
     },
     {
       "name": "register_success",
-      "value": "Registration successful. Please log in."
+      "value": "注册成功，请登录"
     },
     {
       "name": "password_reset_success",
-      "value": "Password reset successful. Please log in."
+      "value": "密码重置成功，请登录"
     },
     {
       "name": "login_auth_failed",
-      "value": "Incorrect account or password."
+      "value": "账号或密码错误"
     },
     {
       "name": "edit_profile",
-      "value": "Edit profile"
+      "value": "编辑个人信息"
     },
     {
       "name": "profile_saved",
-      "value": "Profile saved."
+      "value": "已保存"
+    },
+    {
+      "name": "change_avatar",
+      "value": "更换头像"
     },
     {
       "name": "my_love",

@@ -27,6 +27,7 @@ export interface UserInfo {
   password: string;
   nickname: string;
   email: string;
+  avatar?: string;
 }
 
 /**
@@ -196,6 +197,18 @@ class PreferencesUtil {
     }
     users[userIndex].nickname = nickname;
     users[userIndex].email = email;
+    this.saveUsers(users);
+    return true;
+  }
+
+  updateCurrentUserAvatar(avatarUri: string): boolean {
+    let account = this.getCurrentAccount();
+    let users = this.getUsers();
+    let userIndex = users.findIndex((user: UserInfo) => user.account === account);
+    if (userIndex < 0) {
+      return false;
+    }
+    users[userIndex].avatar = avatarUri;
     this.saveUsers(users);
     return true;
   }

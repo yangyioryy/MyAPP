@@ -13,7 +13,9 @@
  * limitations under the License.
  */
 
+import { common } from '@kit.AbilityKit';
 import { BusinessError } from '@kit.BasicServicesKit';
+import { fileIo as fs, picker } from '@kit.CoreFileKit';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import PreferencesUtil, { UserInfo } from '../common/database/PreferencesUtil';
 import ItemData from '../viewmodel/ItemData';
@@ -32,6 +34,7 @@ export default struct Setting {
   @State account: string = '';
   @State accountName: string = 'Mr. Lee';
   @State accountEmail: string = '2000000@test.cc';
+  @State avatarPath: string = '';
   @State editName: string = '';
   @State editEmail: string = '';
   @State isProfileEditShow: boolean = false;
@@ -57,6 +60,42 @@ export default struct Setting {
       this.account = currentUser.account;
       this.accountName = currentUser.nickname;
       this.accountEmail = currentUser.email;
+      this.avatarPath = currentUser.avatar ?? '';
+    }
+  }
+
+  private async pickAvatar(): Promise<void> {
+    try {
+      let options = new picker.PhotoSelectOptions();
+      options.MIMEType = picker.PhotoViewMIMETypes.IMAGE_TYPE;
+      options.maxSelectNumber = 1;
+      let photoPicker = new picker.PhotoViewPicker();
+      let result = await photoPicker.select(options);
+      if (!result.photoUris || result.photoUris.length === 0) {
+        return;
+      }
+      let srcUri = result.photoUris[0];
+      let context = getContext(this) as common.UIAbilityContext;
+      let dotIndex = srcUri.lastIndexOf('.');
+      let ext = dotIndex >= 0 ? srcUri.substring(dotIndex) : '.jpg';
+      let destPath = `${context.filesDir}/avatar_${Date.now()}${ext}`;
+      let srcFile = fs.openSync(srcUri, fs.OpenMode.READ_ONLY);
+      let destFile = fs.openSync(destPath, fs.OpenMode.READ_WRITE | fs.OpenMode.CREATE);
+      try {
+        fs.copyFileSync(srcFile.fd, destFile.fd);
+      } finally {
+        fs.closeSync(srcFile);
+        fs.closeSync(destFile);
+      }
+      let destUri = 'file://' + destPath;
+      if (!PreferencesUtil.updateCurrentUserAvatar(destUri)) {
+        this.showToast($r('app.string.account_not_exist'));
+        return;
+      }
+      this.avatarPath = destUri;
+    } catch (error) {
+      let err = error as BusinessError;
+      hilog.error(0x00, TAG, `pickAvatar failed, code = ${err.code}, message = ${err.message}`);
     }
   }
 
@@ -88,6 +127,22 @@ export default struct Setting {
         .fontWeight(700)
         .width('100%')
         .textAlign(TextAlign.Center)
+
+      Image(this.avatarPath !== '' ? this.avatarPath : $r('app.media.account'))
+        .width('72vp')
+        .height('72vp')
+        .borderRadius('36vp')
+        .clip(true)
+        .onClick(() => {
+          this.pickAvatar();
+        })
+
+      Text($r('app.string.change_avatar'))
+        .fontSize(14 + this.fontSizeOffset)
+        .fontColor('#0A59F7')
+        .onClick(() => {
+          this.pickAvatar();
+        })
 
       Row() {
         Text($r('app.string.account'))
@@ -190,9 +245,11 @@ export default struct Setting {
           .fontSize(26 + this.fontSizeOffset)
 
         Row() {
-          Image($r('app.media.account'))
+          Image(this.avatarPath !== '' ? this.avatarPath : $r('app.media.account'))
             .width('48vp')
             .height('48vp')
+            .borderRadius('24vp')
+            .clip(true)
           Column() {
             Text(this.accountName)
               .fontSize(20 + this.fontSizeOffset)
@@ -257,7 +314,7 @@ export default struct Setting {
             this.pathStack.pop();
           })
           .bindSheet(this.isProfileEditShow, this.editProfileSheet(), {
-            height: '320vp',
+            height: '480vp',
             onDisappear: () => {
               this.isProfileEditShow = false;
             }
