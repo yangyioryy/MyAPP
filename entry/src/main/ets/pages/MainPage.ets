@@ -13,6 +13,7 @@
  * limitations under the License.
  */
 
+import { curves } from '@kit.ArkUI';
 import PreferencesUtil from '../common/database/PreferencesUtil';
 import Home from '../view/Home';
 import Setting from '../view/Setting';
@@ -30,6 +31,10 @@ export struct MainPage {
   @StorageLink('fontSizeOffset') fontSizeOffset: number = 0;
   @State currentIndex: number = 0;
   @State pathStack: NavPathStack = new NavPathStack();
+  @State tab0OffsetX: string = '0%';
+  @State tab1OffsetX: string = '0%';
+  @State tab0Opacity: number = 1;
+  @State tab1Opacity: number = 1;
   private tabsController: TabsController = new TabsController();
 
   aboutToAppear() {
@@ -37,9 +42,9 @@ export struct MainPage {
   }
 
   private changeTab(index: number): void {
-    this.getUIContext().animateTo({ duration: 320, curve: Curve.EaseOut }, () => {
-      this.currentIndex = index;
-    });
+    if (this.currentIndex === index) {
+      return;
+    }
     this.tabsController.changeIndex(index);
   }
 
@@ -47,7 +52,7 @@ export struct MainPage {
   TabBuilder(title: Resource, index: number, selectedImg: Resource) {
     Column() {
       SymbolGlyph(selectedImg)
-        .fontSize('24fp')
+        .fontSize(this.currentIndex === index ? '28fp' : '22fp')
         .renderingStrategy(SymbolRenderingStrategy.MULTIPLE_OPACITY)
         .symbolEffect(new BounceSymbolEffect(EffectScope.WHOLE, EffectDirection.UP),
           this.currentIndex === index ? true : false)
@@ -58,18 +63,55 @@ export struct MainPage {
         .fontWeight(500)
         .fontColor(this.currentIndex === index ? '#0a59f7' : '#66000000')
     }
-    .backgroundColor('#F1F3F5')
+    .backgroundColor(this.currentIndex === index ? '#1A0A59F7' : '#F1F3F5')
+    .borderRadius('20vp')
     .justifyContent(FlexAlign.Center)
     .height('56vp')
     .width('100%')
     .scale({
-      x: this.currentIndex === index ? 1.08 : 1,
-      y: this.currentIndex === index ? 1.08 : 1
+      x: this.currentIndex === index ? 1.18 : 0.9,
+      y: this.currentIndex === index ? 1.18 : 0.9
     })
-    .animation({ duration: 260, curve: Curve.EaseOut })
+    .animation({
+      duration: 380,
+      curve: curves.springMotion(0.4, 0.75)
+    })
     .onClick(() => {
       this.changeTab(index);
     })
+  }
+
+  private playTabTransition(from: number, to: number, proxy: TabContentTransitionProxy): void {
+    const dir: number = to > from ? 1 : -1;
+    if (to === 0) {
+      this.tab0OffsetX = `${dir * 40}%`;
+      this.tab0Opacity = 0;
+    } else {
+      this.tab1OffsetX = `${dir * 40}%`;
+      this.tab1Opacity = 0;
+    }
+    this.getUIContext().animateTo({
+      duration: 450,
+      curve: curves.cubicBezierCurve(0.2, 0, 0, 1),
+      onFinish: () => {
+        proxy.finishTransition();
+      }
+    }, () => {
+      if (from === 0) {
+        this.tab0OffsetX = `${-dir * 40}%`;
+        this.tab0Opacity = 0;
+      } else {
+        this.tab1OffsetX = `${-dir * 40}%`;
+        this.tab1Opacity = 0;
+      }
+      if (to === 0) {
+        this.tab0OffsetX = '0%';
+        this.tab0Opacity = 1;
+      } else {
+        this.tab1OffsetX = '0%';
+        this.tab1Opacity = 1;
+      }
+    });
   }
 
   build() {
@@ -86,6 +128,8 @@ export struct MainPage {
           right: '12vp'
         })
         .backgroundColor('#F1F3F5')
+        .opacity(this.tab0Opacity)
+        .translate({ x: this.tab0OffsetX })
         .tabBar(this.TabBuilder($r('app.string.Tab_Bar_One'), 0, $r('sys.symbol.house_fill')))
 
         TabContent() {
@@ -96,6 +140,8 @@ export struct MainPage {
           right: '12vp'
         })
         .backgroundColor('#F1F3F5')
+        .opacity(this.tab1Opacity)
+        .translate({ x: this.tab1OffsetX })
         .tabBar(this.TabBuilder($r('app.string.Tab_Bar_Two'), 1, $r('sys.symbol.person_crop_circle_fill_1')))
       }
       .margin({ bottom: '64vp' })
@@ -105,10 +151,20 @@ export struct MainPage {
       .barMode(BarMode.Fixed)
       .animationDuration(420)
       .animationMode(AnimationMode.CONTENT_FIRST)
+      .customContentTransition((from: number, to: number): TabContentAnimatedTransition | undefined => {
+        if (from === to) {
+          return undefined;
+        }
+        const animation: TabContentAnimatedTransition = {
+          timeout: 600,
+          transition: (proxy: TabContentTransitionProxy) => {
+            this.playTabTransition(from, to, proxy);
+          }
+        };
+        return animation;
+      })
       .onChange((index: number) => {
-        this.getUIContext().animateTo({ duration: 320, curve: Curve.EaseOut }, () => {
-          this.currentIndex = index;
-        });
+        this.currentIndex = index;
       })
     }
     .height('100%')
